@@ -41,17 +41,15 @@ io.on('connection', (socket) => {
 
     socket.on('create-room', (data) => {
         const { userEmail, roomId } = data;
-        console.log(data)
         socket.join(roomId);
-        emailToSocketMap.set(userEmail, { socketId: socket.id, role: 'host-user' });
+        emailToSocketMap.set(userEmail, socket.id);
         socket.emit('host-join', { roomId });
     });
 
     socket.on('join-room', (data) => {
-        console.log(data)
         const { userEmail, roomId, myId } = data;
         socket.join(roomId);
-        emailToSocketMap.set(userEmail, { socketId: socket.id, role: 'remote-user' });
+        emailToSocketMap.set(userEmail, socket.id);
         socket.broadcast.to(roomId).emit('user-connected', { userEmail, id: myId })
         socket.emit('user-join', { roomId });
     });
