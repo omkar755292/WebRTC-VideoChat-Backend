@@ -21,8 +21,7 @@ const io = new Server(server, {
     },
 });
 
-// Uncomment the following line when your DB connection is set up
-// DBConnect();
+DBConnect();
 
 app.use((req, res, next) => {
     console.log(`Requested API: ${req.method} ${req.originalUrl}`);
@@ -52,6 +51,27 @@ io.on('connection', (socket) => {
         emailToSocketMap.set(userEmail, socket.id);
         socket.broadcast.to(roomId).emit('user-connected', { email: userEmail, id: myId })
         socket.emit('user-join', { roomId });
+    });
+
+    socket.on('user-toggle-video', (data) => {
+        const { userEmail, roomId, myId } = data;
+        console.log('Video toggle event:', data);
+        socket.join(roomId);
+        socket.to(roomId).emit('user-toggle-video', { userEmail, userId: myId });
+    });
+
+    socket.on('user-toggle-audio', (data) => {
+        const { userEmail, roomId, myId } = data;
+        console.log('Audio toggle event:', data);
+        socket.join(roomId);
+        socket.to(roomId).emit('user-toggle-audio', { userEmail, userId: myId });
+    });
+
+    socket.on('end-call', (data) => {
+        const { userEmail, roomId, myId } = data;
+        console.log('end call event:', data);
+        socket.join(roomId);
+        socket.to(roomId).emit('user-leave', { userEmail, userId: myId });
     });
 
     socket.on('disconnect', () => {
