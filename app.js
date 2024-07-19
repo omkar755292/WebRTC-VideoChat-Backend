@@ -50,7 +50,7 @@ io.on('connection', (socket) => {
         const { userEmail, roomId, myId } = data;
         socket.join(roomId);
         emailToSocketMap.set(userEmail, socket.id);
-        socket.broadcast.to(roomId).emit('user-connected', { userEmail, id: myId })
+        socket.broadcast.to(roomId).emit('user-connected', { email: userEmail, id: myId })
         socket.emit('user-join', { roomId });
     });
 
