@@ -53,18 +53,32 @@ io.on('connection', (socket) => {
         socket.emit('user-join', { roomId });
     });
 
-    socket.on('user-toggle-video', (data) => {
+    socket.on('user-pause-video', (data) => {
         const { userEmail, roomId, myId } = data;
-        console.log('Video toggle event:', data);
+        console.log('Video pause event:', data);
         socket.join(roomId);
-        socket.to(roomId).emit('user-toggle-video', { userEmail, userId: myId });
+        socket.to(roomId).emit('user-pause-video', { userEmail, userId: myId });
     });
 
-    socket.on('user-toggle-audio', (data) => {
+    socket.on('user-play-video', (data) => {
         const { userEmail, roomId, myId } = data;
-        console.log('Audio toggle event:', data);
+        console.log('Video play event:', data);
         socket.join(roomId);
-        socket.to(roomId).emit('user-toggle-audio', { userEmail, userId: myId });
+        socket.to(roomId).emit('user-play-video', { userEmail, userId: myId });
+    });
+
+    socket.on('user-mute-audio', (data) => {
+        const { userEmail, roomId, myId } = data;
+        console.log('Audio mute event:', data);
+        socket.join(roomId);
+        socket.to(roomId).emit('user-mute-audio', { userEmail, userId: myId });
+    });
+
+    socket.on('user-unmute-audio', (data) => {
+        const { userEmail, roomId, myId } = data;
+        console.log('Audio unmute event:', data);
+        socket.join(roomId);
+        socket.to(roomId).emit('user-unmute-audio', { userEmail, userId: myId });
     });
 
     socket.on('end-call', (data) => {
