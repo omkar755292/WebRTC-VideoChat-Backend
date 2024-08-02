@@ -81,6 +81,20 @@ io.on('connection', (socket) => {
         socket.to(roomId).emit('user-unmute-audio', { userEmail, userId: myId });
     });
 
+    socket.on('user-screenshare-on', (data) => {
+        const { userEmail, roomId, myId } = data;
+        console.log('Screenshare On event:', data);
+        socket.join(roomId);
+        socket.to(roomId).emit('screen-share-start', { userEmail, userId: myId });
+    });
+
+    socket.on('user-screenshare-off', (data) => {
+        const { userEmail, roomId, myId } = data;
+        console.log('Screenshare Off event:', data);
+        socket.join(roomId);
+        socket.to(roomId).emit('screen-share-stop', { userEmail, userId: myId });
+    });
+
     socket.on('end-call', (data) => {
         const { userEmail, roomId, myId } = data;
         console.log('end call event:', data);
